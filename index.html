@@ -39,18 +39,16 @@ He showed how he thought in the project main package.json that bundledDependenci
 <p>Looking in the npm tracker at similar issues, there was the non-recursive nature of update. <a href="https://github.com/isaacs/npm/issues/1341">https://github.com/isaacs/npm/issues/1341</a>
 Before getting into the npm api, if ever, I wanted to do a sanity check that recursive install would not cause a probleme extraordinaire.</p>
 
-<p>The script that runs npm here can be used for scripting recursive execution of other programs as well.</p>
+<p>The script that runs npm here can be used for scripting recursive execution of other programs as well, perhaps in a Cakefile.</p>
 
 <p>Usage:</br>
 <code>start_dir = "/dev/scratch"</code></br>
 <code>require("./exec_util").npm_install_rec(start_dir)</code></p>
 
-<p>It could be used by scripting it, like in a Cakefile if npm patch is not appropriate and shrinkwrap doesn't do it, but for the bundledDependencies scenario "npm install --recursive" would be nicer.</p>
-
 <p>File exec_util.coffee:</p>
 
 <pre><code>###
-Recurse files and execute a program in certain directories.
+Recurse through directories and execute a program in certain directories.
 A list of ignore files prevents bad recursions.
 A list of target files triggers exec of args if found in the cwd.
 Usage: See npm_install_rec below.
