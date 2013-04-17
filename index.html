@@ -39,7 +39,7 @@ He showed how he thought in the project main package.json that bundledDependenci
 <p>Looking in the npm tracker at similar issues, there was the non-recursive nature of update. <a href="https://github.com/isaacs/npm/issues/1341">https://github.com/isaacs/npm/issues/1341</a>
 Before getting into the npm api, if ever, I wanted to do a sanity check that recursive install would not cause a probleme extraordinaire.</p>
 
-<p>The script that runs npm here can be used for scripting recursive execution of other programs as well, perhaps in a Cakefile.</p>
+<p>The script here could run install from a Cakefile or such, or used for scripting recursive execution of other programs as well.</p>
 
 <p>Usage:</br>
 <code>start_dir = "/dev/scratch"</code></br>
@@ -53,8 +53,7 @@ Execute arbitrary args in a dir, singly or recursively.
 A list of ignore files prevents bad recursions.
 A list of target files triggers exec of args if found in the cwd.
 Usage: See npm_install_rec below.
-DEF_IGNORES works for me, but do you ever need to go to node_modules?
-Note: file is passed but not currently used in exec_args_in_dir.
+Note: In exec_args_in_dir, file is passed for example but not used.
 Paul McCulloch, 16 April 2013
 License: <= MIT
 ###
