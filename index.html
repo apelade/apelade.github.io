@@ -37,7 +37,10 @@
 He showed how he thought in the project main package.json that bundledDependencies should be able to have their deps recursively installed with npm install. So I did a test to see if it's still that way, which it is as of 4/16/2013. </p>
 
 <p>Looking at similar issues, there was the non-recursive nature of update, seems to be a popular issue in the npm tracker. <a href="https://github.com/isaacs/npm/issues/1341">https://github.com/isaacs/npm/issues/1341</a>
-Before getting into the npm api, if ever, I wanted to do a sanity check that recursive install would not cause a probleme extraordinaire. So I cam up with a fs.readdr script that simply called child_process.exec. It went into node_modules so I added ignores[]. Refactored.</p>
+Before getting into the npm api, if ever, I wanted to do a sanity check that recursive install would not cause a probleme extraordinaire.</p>
+
+<p>So I came up with a fs.readdr script that simply called child_process.exec. It naively recursed into node_modules so I added ignores[].
+After refactoring out the npm bits, it can be used for scripting recursive execution of other programs as well</p>
 
 <p>Usage:
 <code>require("./exec_util").npm_install_rec("/dev/scratch")</code></p>
