@@ -32,18 +32,18 @@
 <p><code>npm install --recursive</code>
 <code>npm update --recursive</code></p>
 
-<p>Today I was looking at the Holowaychuk video on vimeo about modular apps.
+<p>Today I watched the Holowaychuk video on vimeo about modular apps.
 <a href="http://vimeo.com/56166857">http://vimeo.com/56166857</a>
-He showed how he thought in the project main package.json that bundledDependencies should be able to have their deps recursively installed with npm install. So I did a test to see if it's still that way, which it is as of 4/16/2013, on node 0.10.4 and npm 1.2.18</p>
+He showed how he thought in the project main package.json that bundledDependencies should be able to have their deps recursively installed with npm install. It's still that way, which it is as of 4/16/2013, on node 0.10.4 and npm 1.2.18, win7-64</p>
 
-<p>Looking at similar issues, there was the non-recursive nature of update, seems to be a popular issue in the npm tracker. <a href="https://github.com/isaacs/npm/issues/1341">https://github.com/isaacs/npm/issues/1341</a>
+<p>Looking in the npm tracker at similar issues, there was the non-recursive nature of update. <a href="https://github.com/isaacs/npm/issues/1341">https://github.com/isaacs/npm/issues/1341</a>
 Before getting into the npm api, if ever, I wanted to do a sanity check that recursive install would not cause a probleme extraordinaire.</p>
 
-<p>So I came up with a fs.readdr script that simply called child_process.exec. It naively recursed into node_modules so I added ignores[].
-After refactoring out the npm bits, it can be used for scripting recursive execution of other programs as well</p>
+<p>The script that runs npm here can be used for scripting recursive execution of other programs as well</p>
 
 <p>Usage:
-<code>require("./exec_util").npm_install_rec("/dev/scratch")</code></p>
+<code>start_dir = "/dev/scratch"</code>
+<code>require("./exec_util").npm_install_rec(start_dir)</code></p>
 
 <p>File exec_util.coffee:</p>
 
@@ -53,6 +53,7 @@ A list of ignore files prevents bad recursions.
 A list of target files triggers exec of args if found in the cwd.
 Usage: See npm_install_rec below.
 DEF_IGS works for me, but do you ever need to go to node_modules?
+Note: file is passed but not currently used in exec_args_in_dir.
 Paul McCulloch, 16 April 2013
 License: &lt;= MIT
 ###
@@ -60,7 +61,7 @@ License: &lt;= MIT
 fs = require "fs"
 DEF_IGS = ["node_modules", ".git"]
 
-exec_args_in_dir = (args, dir) -&gt;
+exec_args_in_dir = (args, dir, file) -&gt;
   console.log "exec", args, "in", dir
   exec = require('child_process').exec
   command = exec args, {cwd:dir, stio:"inherit"}, (err,stout,sterr) -&gt;
@@ -72,7 +73,7 @@ exec_args_in_dir = (args, dir) -&gt;
 func_walk = (args, file, parent=null, ignores=DEF_IGS, targets=[]) -&gt;
   if args? and file?
     if file in targets and parent?
-      exec_args_in_dir args, parent
+      exec_args_in_dir args, parent, file
     else if file not in ignores
       if parent?
         file = parent + "/" + file
@@ -94,13 +95,13 @@ npm_update_rec = (start) -&gt;
 
 module.exports = exports =
   func_walk: func_walk
-  exec_args_dir: exec_args_in_dir
+  exec_args_in_dir: exec_args_in_dir
   npm_install_rec: npm_install_rec
   npm_update_rec: npm_update_rec
 </code></pre>
 
 <p>Could be useful for an installer if npm is not the way to go and shrinkwrap doesn't do it.
-The problem for the Holowaychuk scenario is that it's not just npm install anymore, it's Cakefile requires exec_util or whatever. Works on win7-64.</p>
+The problem for the bundledDependencies scenario is that it's not just "npm install" anymore, but you could use this from a Cakefile etc. </p>
       </section>
     </div>
 
