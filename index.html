@@ -47,18 +47,20 @@ Before getting into the npm api, if ever, I wanted to do a sanity check that rec
 
 <p>File exec_util.coffee:</p>
 
-<pre><code>###
-Recurse through directories and execute a program in certain directories.
+<pre><code>
+###
+Execute arbitrary args in a dir, singly or recursively.
 A list of ignore files prevents bad recursions.
 A list of target files triggers exec of args if found in the cwd.
 Usage: See npm_install_rec below.
+DEF_IGNORES works for me, but do you ever need to go to node_modules?
 Note: file is passed but not currently used in exec_args_in_dir.
 Paul McCulloch, 16 April 2013
 License: <= MIT
 ###
 
 fs = require "fs"
-IGNORES = ["node_modules", ".git"]
+DEF_IGNORES = ["node_modules", ".git"]
 
 exec_args_in_dir = (args, dir, file) ->
   console.log "exec", args, "in", dir
@@ -69,7 +71,7 @@ exec_args_in_dir = (args, dir, file) ->
                 "\n stout?", stout,
                 "\n sterr?", sterr
 
-func_walk = (args, file, parent=null, ignores=IGNORES, targets=[]) ->
+func_walk = (args, file, parent=null, ignores=DEF_IGNORES, targets=[]) ->
   if args? and file?
     if file in targets and parent?
       exec_args_in_dir args, parent, file
@@ -86,11 +88,12 @@ func_walk = (args, file, parent=null, ignores=IGNORES, targets=[]) ->
               for item in files
                 do -> func_walk(args, item, file, ignores, targets)
 
+
 npm_install_rec = (start) ->
-  func_walk "npm -s install", start, null, IGNORES, ["package.json"]
+  func_walk "npm -s install", start, null, DEF_IGNORES, ["package.json"]
 
 npm_update_rec = (start) ->
-  func_walk "npm -s update", start, null, IGNORES, ["package.json"]
+  func_walk "npm -s update", start, null, DEF_IGNORES, ["package.json"]
 
 module.exports = exports =
   func_walk: func_walk
