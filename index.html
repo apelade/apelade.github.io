@@ -41,6 +41,8 @@ Before getting into the npm api, if ever, I wanted to do a sanity check that rec
 
 <p>The script that runs npm here can be used for scripting recursive execution of other programs as well.</p>
 
+<p>It could be used by scripting it, like in a Cakefile if npm patch is not appropriate and shrinkwrap doesn't do it, but for the bundledDependencies scenario it would be nicer to do a real npm install --recursive. </p>
+
 <p>Usage:</br>
 <code>start_dir = "/dev/scratch"</code></br>
 <code>require("./exec_util").npm_install_rec(start_dir)</code></p>
@@ -100,8 +102,7 @@ module.exports = exports =
   npm_update_rec: npm_update_rec
 </code></pre>
 
-<p>Could be useful for an installer if npm is not the way to go and shrinkwrap doesn't do it.
-The problem for the bundledDependencies scenario is that it's not just "npm install" anymore, but you could use this from a Cakefile etc. </p>
+
       </section>
     </div>
 
