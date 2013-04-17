@@ -50,56 +50,56 @@ Before getting into the npm api, if ever, I wanted to do a sanity check that rec
 <p>File exec_util.coffee:</p>
 
 <pre><code>###
-Execute arbitrary args in a dir, singly or recursively.
+Recurse files and execute a program in certain directories.
 A list of ignore files prevents bad recursions.
 A list of target files triggers exec of args if found in the cwd.
 Usage: See npm_install_rec below.
-DEF_IGS works for me, but do you ever need to go to node_modules?
 Note: file is passed but not currently used in exec_args_in_dir.
 Paul McCulloch, 16 April 2013
-License: &lt;= MIT
+License: <= MIT
 ###
 
 fs = require "fs"
-DEF_IGS = ["node_modules", ".git"]
+IGNORES = ["node_modules", ".git"]
 
-exec_args_in_dir = (args, dir, file) -&gt;
+exec_args_in_dir = (args, dir, file) ->
   console.log "exec", args, "in", dir
   exec = require('child_process').exec
-  command = exec args, {cwd:dir, stio:"inherit"}, (err,stout,sterr) -&gt;
+  command = exec args, {cwd:dir, stio:"inherit"}, (err,stout,sterr) ->
     console.log "\n cwd?", dir,
                 "\n err?", err,
                 "\n stout?", stout,
                 "\n sterr?", sterr
 
-func_walk = (args, file, parent=null, ignores=DEF_IGS, targets=[]) -&gt;
+func_walk = (args, file, parent=null, ignores=IGNORES, targets=[]) ->
   if args? and file?
     if file in targets and parent?
       exec_args_in_dir args, parent, file
     else if file not in ignores
       if parent?
         file = parent + "/" + file
-      fs.stat file, (err,stats) -&gt;
+      fs.stat file, (err,stats) ->
         console.log err if err?
         if stats.isDirectory()
-          fs.readdir file, (err,files) -&gt;
+          fs.readdir file, (err,files) ->
             if err?
               console.log err
             else
               for item in files
-                do -&gt; func_walk(args, item, file, ignores, targets)
+                do -> func_walk(args, item, file, ignores, targets)
 
-npm_install_rec = (start) -&gt;
-  func_walk "npm -s install", start, null, DEF_IGS, ["package.json"]
+npm_install_rec = (start) ->
+  func_walk "npm -s install", start, null, IGNORES, ["package.json"]
 
-npm_update_rec = (start) -&gt;
-  func_walk "npm -s update", start, null, DEF_IGS, ["package.json"]
+npm_update_rec = (start) ->
+  func_walk "npm -s update", start, null, IGNORES, ["package.json"]
 
 module.exports = exports =
   func_walk: func_walk
   exec_args_in_dir: exec_args_in_dir
   npm_install_rec: npm_install_rec
   npm_update_rec: npm_update_rec
+
 </code></pre>
 
 
