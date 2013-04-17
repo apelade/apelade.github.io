@@ -37,7 +37,7 @@
 He showed how he thought in the project main package.json that bundledDependencies should be able to have their deps recursively installed with npm install. So I did a test to see if it's still that way, which it is as of 4/16/2013. </p>
 
 <p>Looking at similar issues, there was the non-recursive nature of update, seems to be a popular issue in the npm tracker. <a href="https://github.com/isaacs/npm/issues/1341">https://github.com/isaacs/npm/issues/1341</a>
-Before getting into the npm api, if ever, I wanted to do a sanity check that recursive install would not cause a probleme extraordinaire. So I cam up with a fs.readdr script that simply called child_process.exec. Then it was begging for refactoring so badly. It went into node_modules so I added ignores[]. I broke out the parts that walk the recursion, and do the exec. Moved hardcode to params with defaults with the goal of making useful for more than npm execution.</p>
+Before getting into the npm api, if ever, I wanted to do a sanity check that recursive install would not cause a probleme extraordinaire. So I cam up with a fs.readdr script that simply called child_process.exec. It went into node_modules so I added ignores[]. Refactored.</p>
 
 <p>Usage:
 <code>require("./exec_util").npm_install_rec("/dev/scratch")</code></p>
@@ -68,10 +68,10 @@ exec_args_in_dir = (args, dir) -&gt;
 
 func_walk = (args, file, parent=null, ignores=DEF_IGS, targets=[]) -&gt;
   if args? and file?
-    if file in targets and parent? # FUNC
+    if file in targets and parent?
       exec_args_in_dir args, parent
-    else if file not in ignores    # WALK 
-      if parent? # prepend full path to file for following ops
+    else if file not in ignores
+      if parent?
         file = parent + "/" + file
       fs.stat file, (err,stats) -&gt;
         console.log err if err?
@@ -97,7 +97,7 @@ module.exports = exports =
 </code></pre>
 
 <p>Could be useful for an installer if npm is not the way to go and shrinkwrap doesn't do it.
-The problem for the Holowaychuk scenario is that it's not just npm install, it's Cakefile requires exec_util or whatever. Works on win7-64.</p>
+The problem for the Holowaychuk scenario is that it's not just npm install anymore, it's Cakefile requires exec_util or whatever. Works on win7-64.</p>
       </section>
     </div>
 
@@ -108,7 +108,7 @@ The problem for the Holowaychuk scenario is that it's not just npm install, it's
       </footer>
     </div>
 
-    
+
 
   </body>
 </html>
