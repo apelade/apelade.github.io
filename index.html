@@ -39,7 +39,7 @@ He showed how he thought in the project main package.json that bundledDependenci
 <p>Looking in the npm issues, it's <a href="http://github.com/isaacs/npm/issues/2442">http://github.com/isaacs/npm/issues/2442</a>, and there was the non-recursive nature of install: <a href="https://github.com/isaacs/npm/issues/1341">https://github.com/isaacs/npm/issues/1341</a>
 Before getting into the npm api, if ever, I wanted to do a sanity check that recursive install would not cause a probleme extraordinaire.</p>
 
-<p>The script here could run update or install from a package.json hook. NPM seems to survive calling install from a postinstall hook, although I only really need update in my situation.</p>
+<p>The script here could run update or install from a package.json hook. Good-guy npm survives calling install from a postinstall hook.</p>
 <p>File package.json:
 <pre><code>
 {
