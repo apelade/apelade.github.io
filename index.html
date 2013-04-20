@@ -36,24 +36,38 @@
 <a href="http://vimeo.com/56166857">http://vimeo.com/56166857</a>
 He showed how he thought in the project main package.json that bundledDependencies should be able to have their deps recursively installed with npm install. It's still that way, which it is as of 4/16/2013, on node 0.10.4 and npm 1.2.18, win7-64</p>
 
-<p>Looking in the npm issues, it's <a href="http://github.com/isaacs/npm/issues/2442">http://github.com/isaacs/npm/issues/2442</a>, and there was the non-recursive nature of update. <a href="https://github.com/isaacs/npm/issues/1341">https://github.com/isaacs/npm/issues/1341</a>
+<p>Looking in the npm issues, it's <a href="http://github.com/isaacs/npm/issues/2442">http://github.com/isaacs/npm/issues/2442</a>, and there was the non-recursive nature of install: <a href="https://github.com/isaacs/npm/issues/1341">https://github.com/isaacs/npm/issues/1341</a>
 Before getting into the npm api, if ever, I wanted to do a sanity check that recursive install would not cause a probleme extraordinaire.</p>
 
-<p>The script here could run install from a Cakefile or such, or used for scripting recursive execution of other programs as well.</p>
+<p>The script here could run update or install from a package.json hook. NPM seems to survive calling install from a postinstall hook, although I only really need update in my situation.</p>
+<p>File package.json:
+<pre><code>
+{
+  "name": "npm_recurse_demo",
+  "version": "0.0.1",
+  "description": "npm recurse demo",
+  "dependencies": {
+    "jade": "~0.28.2",
+    "express": "~3.1.2"
+  },
+  "optionalDependencies": {"sax": "~0.5.2"},
+  "scripts" : {
+    "postinstall" : "node exec_util npm_install_rec /dev/npm_recurse_demo/lib/"
+  }
+}
 
-<p>Usage:</br>
-<code>start_dir = "/dev/scratch"</code></br>
-<code>require("./exec_util").npm_install_rec(start_dir)</code></p>
+</code></pre>
+</p>
 
-<p>File exec_util.coffee:</p>
-
+<p>File exec_util.js is too ugly. I'll be checking out CoffeScriptRedux and LiveScript. Here is the coffeescript:
 <pre><code>
 ###
 Execute arbitrary args in a dir, singly or recursively.
 A list of ignore files prevents bad recursions.
 A list of target files triggers exec of args if found in the cwd.
 Usage: See npm_install_rec below.
-Note: In exec_args_in_dir, file is passed for example but not used.
+DEF_IGNORES works for me, but do you ever need to go to node_modules?
+Note: file is passed but not currently used in exec_args_in_dir.
 Paul McCulloch, 16 April 2013
 License: <= MIT
 ###
@@ -61,7 +75,7 @@ License: <= MIT
 fs = require "fs"
 DEF_IGNORES = ["node_modules", ".git"]
 
-exec_args_in_dir = (args, dir, file) ->
+exec_args_in_dir = (args, dir) ->
   console.log "exec", args, "in", dir
   exec = require('child_process').exec
   command = exec args, {cwd:dir, stio:"inherit"}, (err,stout,sterr) ->
@@ -73,7 +87,7 @@ exec_args_in_dir = (args, dir, file) ->
 func_walk = (args, file, parent=null, ignores=DEF_IGNORES, targets=[]) ->
   if args? and file?
     if file in targets and parent?
-      exec_args_in_dir args, parent, file
+      exec_args_in_dir args, parent
     else if file not in ignores
       if parent?
         file = parent + "/" + file
@@ -100,9 +114,10 @@ module.exports = exports =
   npm_install_rec: npm_install_rec
   npm_update_rec: npm_update_rec
 
+if process.argv?.length is 4
+  module.exports[process.argv[2]](process.argv[3])
 </code></pre>
-
-
+</p>
       </section>
     </div>
 
