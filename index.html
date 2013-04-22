@@ -4,11 +4,11 @@
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="apelade : deep pale apelade ape lap leaped" />
+    <meta name="description" content="apelade" />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    <title>apelade</title>
+    <title>Recursive npm</title>
   </head>
 
   <body>
@@ -18,8 +18,7 @@
         <header class="inner">
           <a id="forkme_banner" href="https://github.com/apelade">View on GitHub</a>
 
-          <h1 id="project_title">apelade</h1>
-          <h2 id="project_tagline">deep pale apelade ape lap leaped</h2>
+          <h1 id="project_title">Recursive npm</h1>
 
         </header>
     </div>
@@ -37,7 +36,7 @@
 He showed how he thought in the project main package.json that bundledDependencies should be able to have their deps recursively installed with npm install. It's still that way, which it is as of 4/16/2013, on node 0.10.4 and npm 1.2.18, win7-64</p>
 
 <p>Looking in the npm issues, it's <a href="http://github.com/isaacs/npm/issues/2442">http://github.com/isaacs/npm/issues/2442</a>, and there was the non-recursive nature of install: <a href="https://github.com/isaacs/npm/issues/1341">https://github.com/isaacs/npm/issues/1341</a>
-Before getting into the npm api, if ever, I wanted to do a sanity check that recursive install would not cause a probleme extraordinaire.</p>
+A solution may involve allowing a path in addition to or nstead of semver: <a href="https://github.com/isaacs/npm/issues/1558">https://github.com/isaacs/npm/issues/1558</a> Before getting into the npm api, if ever, I wanted to do a sanity check that recursive install would not cause a probleme extraordinaire.</p>
 
 <p>The script here could run update or install from a package.json hook. Good-guy npm survives calling install from a postinstall hook.</p>
 <p>File package.json:
@@ -59,7 +58,7 @@ Before getting into the npm api, if ever, I wanted to do a sanity check that rec
 </code></pre>
 </p>
 
-<p>File exec_util.js is too ugly. I'll be checking out CoffeScriptRedux and LiveScript. Here is the coffeescript:
+<p>This is using CoffeScriptRedux. Here is the coffeescript:
 <pre><code>
 ###
 Execute arbitrary args in a dir, singly or recursively.
