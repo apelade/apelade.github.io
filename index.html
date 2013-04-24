@@ -33,16 +33,21 @@
 
 <p>Today I watched the Holowaychuk video on vimeo about modular apps.
 <a href="http://vimeo.com/56166857">http://vimeo.com/56166857</a>
-He showed how he thought in the project main package.json that bundledDependencies should be able to have their deps recursively installed with npm install. It's still that way, which it is as of 4/16/2013, on node 0.10.4 and npm 1.2.18, win7-64</p>
+He showed how he thought in the project main package.json that bundledDependencies should be able to have their deps recursively installed with npm install.
+They can be with update but only if they are in the tree of node_modules somewhere, and it still is not a single command to get everything.
+It's still that way, which it is as of 4/16/2013, on node 0.10.4 and npm 1.2.18, win7-64
+You can now get a private npm from "Iris npm" or you can use git up to some limit.
+People have differing reasons for wanting this behavior, and really they want it to function on items from package.json, but I wanted to do something recursive.
 
+
+</p>
 <p>Relevant npm issues:<br>
 <a href="http://github.com/isaacs/npm/issues/2442">github.com/isaacs/npm/issues/2442</a> -- asks for the deps of bundled to be installed <br>
 <a href="http://github.com/isaacs/npm/issues/1341">github.com/isaacs/npm/issues/1341</a> -- expects deps of installed to be installed <br>
 <a href="http://github.com/isaacs/npm/issues/1558">github.com/isaacs/npm/issues/1558</a> -- solution may involve allowing path instead of semver <br>
 
-<p>Before getting into the npm api, if ever, I wanted to do a sanity check that recursive install would not cause a probleme extraordinaire.</p>
-
-<p>The script here could run update or install from a package.json hook. Good-guy npm survives calling install from a postinstall hook.</p>
+<p>Before getting into the npm api, if ever, I wanted to do a sanity check that recursive install would not a problem. It's really not different from a shell script, as it is.
+The script here could run update or install from a package.json hook. It says in the npm hooks page that is an anti-pattern, but good-guy npm does survive calling install from a postinstall hook.</p>
 <p>File package.json:
 <pre><code>
 {
